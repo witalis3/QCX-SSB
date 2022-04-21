@@ -15,7 +15,7 @@
 //#define F_XTAL  25000000   // 25MHz SI5351 crystal  (enable for 25MHz TCXO)
 //#define SWAP_ROTARY    1   // Swap rotary direction (enable for WB2CBA-uSDX)
 //#define QCX            1   // Supports older (non-SDR) QCX HW modifications (QCX, QCX-SSB, QCX-DSP with I/Q alignment-feature)
-//#define OLED_SSD1306   1   // OLED display (SSD1306 128x32 or 128x64), connect SDA (PD2), SCL (PD3)
+#define OLED_SSD1306   1   // OLED display (SSD1306 128x32 or 128x64), connect SDA (PD2), SCL (PD3)
 //#define OLED_SH1106    1   // OLED display (SH1106 1.3" inch display), connect SDA (PD2), SCL (PD3), NOTE that this display is pretty slow
 //#define LCD_I2C        1   // LCD with I2C (PCF8574 module          ), connect SDA (PD2), SCL (PD3), NOTE that this display is pretty slow
 #define LPF_SWITCHING_DL2MAN_USDX_REV3           1   // Enable 8-band filter bank switching:     latching relays wired to a TCA/PCA9555 GPIO extender on the PC4/PC5 I2C bus; relays are using IO0.0 as common (ground), IO1.0..7 used by the individual latches K0-7 switching respectively LPFs for 10m, 15m, 17m, 20m, 30m, 40m, 60m, 80m
@@ -165,7 +165,7 @@ static uint32_t stimer;
 #define ONEBUTTON  1
 #define ONEBUTTON_INV 1
 #undef DEBUG
-adjust I2C and I2C_ ports, 
+adjust I2C and I2C_ ports,
 ssb_cap=1; dsp_cap=2;
 #define _DELAY() for(uint8_t i = 0; i != 5; i++) asm("nop");
 #define F_XTAL 20004000
@@ -175,13 +175,13 @@ ssb_cap=1; dsp_cap=2;
 //FUSES = { .low = 0xFF, .high = 0xD6, .extended = 0xFD };   // Fuse settings should be set at programming (Arduino IDE > Tools > Burn bootloader)
 
 #if(ARDUINO < 10810)
-   #error "Unsupported Arduino IDE version, use Arduino IDE 1.8.10 or later from https://www.arduino.cc/en/software"
+   //#error "Unsupported Arduino IDE version, use Arduino IDE 1.8.10 or later from https://www.arduino.cc/en/software"
 #endif
 #if !(defined(ARDUINO_ARCH_AVR))
    #error "Unsupported architecture, select Arduino IDE > Tools > Board > Arduino AVR Boards > Arduino Uno."
 #endif
 #if(F_CPU != 16000000)
-   #error "Unsupported clock frequency, Arduino IDE must specify 16MHz clock; alternate crystal frequencies may be specified with F_MCU."
+   //#error "Unsupported clock frequency, Arduino IDE must specify 16MHz clock; alternate crystal frequencies may be specified with F_MCU."
 #endif
 #undef F_CPU
 #define F_CPU 20007000  // Actual crystal frequency of 20MHz XTAL1, note that this declaration is just informative and does not correct the timing in Arduino functions like delay(); hence a 1.25 factor needs to be added for correction.
@@ -387,7 +387,7 @@ public:  // LCD1602 display in 4-bit mode, RS is pull-up and kept low when idle 
     cmd(0x33);                                     // Ensures display is in 8-bit mode
     delayMicroseconds(4500); cmd(0x33); delayMicroseconds(4500); cmd(0x33); delayMicroseconds(150); // * Ensures display is in 8-bit mode
     cmd(0x32);                                     // Puts display in 4-bit mode
-    cmd(0x28);                                     // * Function set: 2-line, 5x8 
+    cmd(0x28);                                     // * Function set: 2-line, 5x8
     cmd(0x0c);                                     // Display on
     //if(reinit) return;
     cmd(0x01);                                     // Clear display
@@ -588,101 +588,101 @@ public: // QCXLiquidCrystal extends LiquidCrystal library for pull-up driven LCD
 
 /* // 6x8 technoblogy font
 const uint8_t font[]PROGMEM = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-   0x00, 0x00, 0x5F, 0x00, 0x00, 0x00, 
-   0x00, 0x07, 0x00, 0x07, 0x00, 0x00, 
-   0x14, 0x7F, 0x14, 0x7F, 0x14, 0x00, 
-   0x24, 0x2A, 0x7F, 0x2A, 0x12, 0x00, 
-   0x23, 0x13, 0x08, 0x64, 0x62, 0x00, 
-   0x36, 0x49, 0x56, 0x20, 0x50, 0x00, 
-   0x00, 0x08, 0x07, 0x03, 0x00, 0x00, 
-   0x00, 0x1C, 0x22, 0x41, 0x00, 0x00, 
-   0x00, 0x41, 0x22, 0x1C, 0x00, 0x00, 
-   0x2A, 0x1C, 0x7F, 0x1C, 0x2A, 0x00, 
-   0x08, 0x08, 0x3E, 0x08, 0x08, 0x00, 
-   0x00, 0x80, 0x70, 0x30, 0x00, 0x00, 
-   0x08, 0x08, 0x08, 0x08, 0x08, 0x00, 
-   0x00, 0x00, 0x60, 0x60, 0x00, 0x00, 
-   0x20, 0x10, 0x08, 0x04, 0x02, 0x00, 
-   0x3E, 0x51, 0x49, 0x45, 0x3E, 0x00, 
-   0x00, 0x42, 0x7F, 0x40, 0x00, 0x00, 
-   0x72, 0x49, 0x49, 0x49, 0x46, 0x00, 
-   0x21, 0x41, 0x49, 0x4D, 0x33, 0x00, 
-   0x18, 0x14, 0x12, 0x7F, 0x10, 0x00, 
-   0x27, 0x45, 0x45, 0x45, 0x39, 0x00, 
-   0x3C, 0x4A, 0x49, 0x49, 0x31, 0x00, 
-   0x41, 0x21, 0x11, 0x09, 0x07, 0x00, 
-   0x36, 0x49, 0x49, 0x49, 0x36, 0x00, 
-   0x46, 0x49, 0x49, 0x29, 0x1E, 0x00, 
-   0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 
-   0x00, 0x40, 0x34, 0x00, 0x00, 0x00, 
-   0x00, 0x08, 0x14, 0x22, 0x41, 0x00, 
-   0x14, 0x14, 0x14, 0x14, 0x14, 0x00, 
-   0x00, 0x41, 0x22, 0x14, 0x08, 0x00, 
-   0x02, 0x01, 0x59, 0x09, 0x06, 0x00, 
-   0x3E, 0x41, 0x5D, 0x59, 0x4E, 0x00, 
-   0x7C, 0x12, 0x11, 0x12, 0x7C, 0x00, 
-   0x7F, 0x49, 0x49, 0x49, 0x36, 0x00, 
-   0x3E, 0x41, 0x41, 0x41, 0x22, 0x00, 
-   0x7F, 0x41, 0x41, 0x41, 0x3E, 0x00, 
-   0x7F, 0x49, 0x49, 0x49, 0x41, 0x00, 
-   0x7F, 0x09, 0x09, 0x09, 0x01, 0x00, 
-   0x3E, 0x41, 0x41, 0x51, 0x73, 0x00, 
-   0x7F, 0x08, 0x08, 0x08, 0x7F, 0x00, 
-   0x00, 0x41, 0x7F, 0x41, 0x00, 0x00, 
-   0x20, 0x40, 0x41, 0x3F, 0x01, 0x00, 
-   0x7F, 0x08, 0x14, 0x22, 0x41, 0x00, 
-   0x7F, 0x40, 0x40, 0x40, 0x40, 0x00, 
-   0x7F, 0x02, 0x1C, 0x02, 0x7F, 0x00, 
-   0x7F, 0x04, 0x08, 0x10, 0x7F, 0x00, 
-   0x3E, 0x41, 0x41, 0x41, 0x3E, 0x00, 
-   0x7F, 0x09, 0x09, 0x09, 0x06, 0x00, 
-   0x3E, 0x41, 0x51, 0x21, 0x5E, 0x00, 
-   0x7F, 0x09, 0x19, 0x29, 0x46, 0x00, 
-   0x26, 0x49, 0x49, 0x49, 0x32, 0x00, 
-   0x03, 0x01, 0x7F, 0x01, 0x03, 0x00, 
-   0x3F, 0x40, 0x40, 0x40, 0x3F, 0x00, 
-   0x1F, 0x20, 0x40, 0x20, 0x1F, 0x00, 
-   0x3F, 0x40, 0x38, 0x40, 0x3F, 0x00, 
-   0x63, 0x14, 0x08, 0x14, 0x63, 0x00, 
-   0x03, 0x04, 0x78, 0x04, 0x03, 0x00, 
-   0x61, 0x59, 0x49, 0x4D, 0x43, 0x00, 
-   0x00, 0x7F, 0x41, 0x41, 0x41, 0x00, 
-   0x02, 0x04, 0x08, 0x10, 0x20, 0x00, 
-   0x00, 0x41, 0x41, 0x41, 0x7F, 0x00, 
-   0x04, 0x02, 0x01, 0x02, 0x04, 0x00, 
-   0x40, 0x40, 0x40, 0x40, 0x40, 0x00, 
-   0x00, 0x03, 0x07, 0x08, 0x00, 0x00, 
-   0x20, 0x54, 0x54, 0x78, 0x40, 0x00, 
-   0x7F, 0x28, 0x44, 0x44, 0x38, 0x00, 
-   0x38, 0x44, 0x44, 0x44, 0x28, 0x00, 
-   0x38, 0x44, 0x44, 0x28, 0x7F, 0x00, 
-   0x38, 0x54, 0x54, 0x54, 0x18, 0x00, 
-   0x00, 0x08, 0x7E, 0x09, 0x02, 0x00, 
-   0x18, 0xA4, 0xA4, 0x9C, 0x78, 0x00, 
-   0x7F, 0x08, 0x04, 0x04, 0x78, 0x00, 
-   0x00, 0x44, 0x7D, 0x40, 0x00, 0x00, 
-   0x20, 0x40, 0x40, 0x3D, 0x00, 0x00, 
-   0x7F, 0x10, 0x28, 0x44, 0x00, 0x00, 
-   0x00, 0x41, 0x7F, 0x40, 0x00, 0x00, 
-   0x7C, 0x04, 0x78, 0x04, 0x78, 0x00, 
-   0x7C, 0x08, 0x04, 0x04, 0x78, 0x00, 
-   0x38, 0x44, 0x44, 0x44, 0x38, 0x00, 
-   0xFC, 0x18, 0x24, 0x24, 0x18, 0x00, 
-   0x18, 0x24, 0x24, 0x18, 0xFC, 0x00, 
-   0x7C, 0x08, 0x04, 0x04, 0x08, 0x00, 
-   0x48, 0x54, 0x54, 0x54, 0x24, 0x00, 
-   0x04, 0x04, 0x3F, 0x44, 0x24, 0x00, 
-   0x3C, 0x40, 0x40, 0x20, 0x7C, 0x00, 
-   0x1C, 0x20, 0x40, 0x20, 0x1C, 0x00, 
-   0x3C, 0x40, 0x30, 0x40, 0x3C, 0x00, 
-   0x44, 0x28, 0x10, 0x28, 0x44, 0x00, 
-   0x4C, 0x90, 0x90, 0x90, 0x7C, 0x00, 
-   0x44, 0x64, 0x54, 0x4C, 0x44, 0x00, 
-   0x00, 0x08, 0x36, 0x41, 0x00, 0x00, 
-   0x00, 0x00, 0x77, 0x00, 0x00, 0x00, 
-   0x00, 0x41, 0x36, 0x08, 0x00, 0x00, 
-   0x02, 0x01, 0x02, 0x04, 0x02, 0x00, 
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x5F, 0x00, 0x00, 0x00,
+   0x00, 0x07, 0x00, 0x07, 0x00, 0x00,
+   0x14, 0x7F, 0x14, 0x7F, 0x14, 0x00,
+   0x24, 0x2A, 0x7F, 0x2A, 0x12, 0x00,
+   0x23, 0x13, 0x08, 0x64, 0x62, 0x00,
+   0x36, 0x49, 0x56, 0x20, 0x50, 0x00,
+   0x00, 0x08, 0x07, 0x03, 0x00, 0x00,
+   0x00, 0x1C, 0x22, 0x41, 0x00, 0x00,
+   0x00, 0x41, 0x22, 0x1C, 0x00, 0x00,
+   0x2A, 0x1C, 0x7F, 0x1C, 0x2A, 0x00,
+   0x08, 0x08, 0x3E, 0x08, 0x08, 0x00,
+   0x00, 0x80, 0x70, 0x30, 0x00, 0x00,
+   0x08, 0x08, 0x08, 0x08, 0x08, 0x00,
+   0x00, 0x00, 0x60, 0x60, 0x00, 0x00,
+   0x20, 0x10, 0x08, 0x04, 0x02, 0x00,
+   0x3E, 0x51, 0x49, 0x45, 0x3E, 0x00,
+   0x00, 0x42, 0x7F, 0x40, 0x00, 0x00,
+   0x72, 0x49, 0x49, 0x49, 0x46, 0x00,
+   0x21, 0x41, 0x49, 0x4D, 0x33, 0x00,
+   0x18, 0x14, 0x12, 0x7F, 0x10, 0x00,
+   0x27, 0x45, 0x45, 0x45, 0x39, 0x00,
+   0x3C, 0x4A, 0x49, 0x49, 0x31, 0x00,
+   0x41, 0x21, 0x11, 0x09, 0x07, 0x00,
+   0x36, 0x49, 0x49, 0x49, 0x36, 0x00,
+   0x46, 0x49, 0x49, 0x29, 0x1E, 0x00,
+   0x00, 0x00, 0x14, 0x00, 0x00, 0x00,
+   0x00, 0x40, 0x34, 0x00, 0x00, 0x00,
+   0x00, 0x08, 0x14, 0x22, 0x41, 0x00,
+   0x14, 0x14, 0x14, 0x14, 0x14, 0x00,
+   0x00, 0x41, 0x22, 0x14, 0x08, 0x00,
+   0x02, 0x01, 0x59, 0x09, 0x06, 0x00,
+   0x3E, 0x41, 0x5D, 0x59, 0x4E, 0x00,
+   0x7C, 0x12, 0x11, 0x12, 0x7C, 0x00,
+   0x7F, 0x49, 0x49, 0x49, 0x36, 0x00,
+   0x3E, 0x41, 0x41, 0x41, 0x22, 0x00,
+   0x7F, 0x41, 0x41, 0x41, 0x3E, 0x00,
+   0x7F, 0x49, 0x49, 0x49, 0x41, 0x00,
+   0x7F, 0x09, 0x09, 0x09, 0x01, 0x00,
+   0x3E, 0x41, 0x41, 0x51, 0x73, 0x00,
+   0x7F, 0x08, 0x08, 0x08, 0x7F, 0x00,
+   0x00, 0x41, 0x7F, 0x41, 0x00, 0x00,
+   0x20, 0x40, 0x41, 0x3F, 0x01, 0x00,
+   0x7F, 0x08, 0x14, 0x22, 0x41, 0x00,
+   0x7F, 0x40, 0x40, 0x40, 0x40, 0x00,
+   0x7F, 0x02, 0x1C, 0x02, 0x7F, 0x00,
+   0x7F, 0x04, 0x08, 0x10, 0x7F, 0x00,
+   0x3E, 0x41, 0x41, 0x41, 0x3E, 0x00,
+   0x7F, 0x09, 0x09, 0x09, 0x06, 0x00,
+   0x3E, 0x41, 0x51, 0x21, 0x5E, 0x00,
+   0x7F, 0x09, 0x19, 0x29, 0x46, 0x00,
+   0x26, 0x49, 0x49, 0x49, 0x32, 0x00,
+   0x03, 0x01, 0x7F, 0x01, 0x03, 0x00,
+   0x3F, 0x40, 0x40, 0x40, 0x3F, 0x00,
+   0x1F, 0x20, 0x40, 0x20, 0x1F, 0x00,
+   0x3F, 0x40, 0x38, 0x40, 0x3F, 0x00,
+   0x63, 0x14, 0x08, 0x14, 0x63, 0x00,
+   0x03, 0x04, 0x78, 0x04, 0x03, 0x00,
+   0x61, 0x59, 0x49, 0x4D, 0x43, 0x00,
+   0x00, 0x7F, 0x41, 0x41, 0x41, 0x00,
+   0x02, 0x04, 0x08, 0x10, 0x20, 0x00,
+   0x00, 0x41, 0x41, 0x41, 0x7F, 0x00,
+   0x04, 0x02, 0x01, 0x02, 0x04, 0x00,
+   0x40, 0x40, 0x40, 0x40, 0x40, 0x00,
+   0x00, 0x03, 0x07, 0x08, 0x00, 0x00,
+   0x20, 0x54, 0x54, 0x78, 0x40, 0x00,
+   0x7F, 0x28, 0x44, 0x44, 0x38, 0x00,
+   0x38, 0x44, 0x44, 0x44, 0x28, 0x00,
+   0x38, 0x44, 0x44, 0x28, 0x7F, 0x00,
+   0x38, 0x54, 0x54, 0x54, 0x18, 0x00,
+   0x00, 0x08, 0x7E, 0x09, 0x02, 0x00,
+   0x18, 0xA4, 0xA4, 0x9C, 0x78, 0x00,
+   0x7F, 0x08, 0x04, 0x04, 0x78, 0x00,
+   0x00, 0x44, 0x7D, 0x40, 0x00, 0x00,
+   0x20, 0x40, 0x40, 0x3D, 0x00, 0x00,
+   0x7F, 0x10, 0x28, 0x44, 0x00, 0x00,
+   0x00, 0x41, 0x7F, 0x40, 0x00, 0x00,
+   0x7C, 0x04, 0x78, 0x04, 0x78, 0x00,
+   0x7C, 0x08, 0x04, 0x04, 0x78, 0x00,
+   0x38, 0x44, 0x44, 0x44, 0x38, 0x00,
+   0xFC, 0x18, 0x24, 0x24, 0x18, 0x00,
+   0x18, 0x24, 0x24, 0x18, 0xFC, 0x00,
+   0x7C, 0x08, 0x04, 0x04, 0x08, 0x00,
+   0x48, 0x54, 0x54, 0x54, 0x24, 0x00,
+   0x04, 0x04, 0x3F, 0x44, 0x24, 0x00,
+   0x3C, 0x40, 0x40, 0x20, 0x7C, 0x00,
+   0x1C, 0x20, 0x40, 0x20, 0x1C, 0x00,
+   0x3C, 0x40, 0x30, 0x40, 0x3C, 0x00,
+   0x44, 0x28, 0x10, 0x28, 0x44, 0x00,
+   0x4C, 0x90, 0x90, 0x90, 0x7C, 0x00,
+   0x44, 0x64, 0x54, 0x4C, 0x44, 0x00,
+   0x00, 0x08, 0x36, 0x41, 0x00, 0x00,
+   0x00, 0x00, 0x77, 0x00, 0x00, 0x00,
+   0x00, 0x41, 0x36, 0x08, 0x00, 0x00,
+   0x02, 0x01, 0x02, 0x04, 0x02, 0x00,
    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00 };
 
 #define FONT_W 12//6
@@ -1050,7 +1050,7 @@ public:
   void setCursor(uint8_t x, uint8_t y) {
     if(curs){ drawCursor(false); } _setCursor(x * FONT_W, y * FONT_H); if(curs){ drawCursor(true); _setCursor(oledX, oledY); }
   }
-    
+
   void newLine() {
     oledY+=FONT_H;
     if(oledY > OLED_PAGES - FONT_H) {
@@ -1058,7 +1058,7 @@ public:
     }
     _setCursor(0, oledY);
   }
-    
+
   size_t write(byte c) {
     if((c == '\n') || (oledX > ((uint8_t)128 - FONT_W)) ) {
       if(wrap)  newLine();
@@ -1066,7 +1066,7 @@ public:
     }
     //if(oledY > OLED_PAGES - FONT_H) return; //needed?
     c = ((c < 9) ? (c + '~') : c) - ' ';
-    
+
     uint16_t offset = ((uint16_t)c) * FONT_W/(FONT_STRETCHH+1) * FONT_H;
     uint8_t line = FONT_H;
     do
@@ -1178,7 +1178,7 @@ void encoder_setup()
   pinMode(ROT_A, INPUT_PULLUP);
   pinMode(ROT_B, INPUT_PULLUP);
   PCMSK2 |= (1 << PCINT22) | (1 << PCINT23); // interrupt-enable for ROT_A, ROT_B pin changes; see https://github.com/EnviroDIY/Arduino-SDI-12/wiki/2b.-Overview-of-Interrupts
-  PCICR |= (1 << PCIE2); 
+  PCICR |= (1 << PCIE2);
   last_state = (_digitalRead(ROT_B) << 1) | _digitalRead(ROT_A);
   interrupts();
 }
@@ -1194,12 +1194,12 @@ public:
     PCMSK2 |= (1 << PCINT22) | (1 << PCINT23); // interrupt-enable for ROT_A, ROT_B pin changes; see https://github.com/EnviroDIY/Arduino-SDI-12/wiki/2b.-Overview-of-Interrupts
     PCICR |= (1 << PCIE2);
     last_state = (_digitalRead(ROT_B) << 1) | _digitalRead(ROT_A);
-    sei();    
+    sei();
   }
   void event(){
     switch(last_state = (last_state << 4) | (_digitalRead(ROT_B) << 1) | _digitalRead(ROT_A)){ //transition  (see: https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/  )
       case 0x31: case 0x10: case 0x02: case 0x23: if(step < 0) step = 0; step++; if(step >  3){ step = 0; val++; } break;
-      case 0x32: case 0x20: case 0x01: case 0x13: if(step > 0) step = 0; step--; if(step < -3){ step = 0; val--; } break;  
+      case 0x32: case 0x20: case 0x01: case 0x13: if(step > 0) step = 0; step--; if(step < -3){ step = 0; val--; } break;
     }
   }
 };
@@ -1242,7 +1242,7 @@ public:
   ~I2C(){
     I2C_PORT &= ~( I2C_SDA | I2C_SCL );
     I2C_DDR &= ~( I2C_SDA | I2C_SCL );
-  }  
+  }
   inline void start(){
 #ifdef RS_HIGH_ON_IDLE
     I2C_SDA_LO();
@@ -1400,7 +1400,7 @@ public:
   }
 #else  // !NEW_TX
   inline void FAST freq_calc_fast(int16_t df)  // note: relies on cached variables: _msb128, _msa128min512, _div, _fout, fxtal
-  { 
+  {
     #define _MSC  0x80000  //0x80000: 98% CPU load   0xFFFFF: 114% CPU load
     uint32_t msb128 = _msb128 + ((int64_t)(_div * (int32_t)df) * _MSC * 128) / fxtal;
     //uint32_t msb128 = ((int64_t)(_div * (int32_t)df + _mod) * _MSC * 128) / fxtal; // @pre: 14<=_div<=144, |df|<=5000, _mod<=1800e3 (for fout<30M), _MSC=524288
@@ -1443,19 +1443,19 @@ public:
     i2c.stop();
   }
 #endif // !NEW_TX
-  
+
   void SendRegister(uint8_t reg, uint8_t* data, uint8_t n){
     i2c.start();
     i2c.SendByte(SI5351_ADDR << 1);
     i2c.SendByte(reg);
     while (n--) i2c.SendByte(*data++);
-    i2c.stop();      
+    i2c.stop();
   }
   void SendRegister(uint8_t reg, uint8_t val){ SendRegister(reg, &val, 1); }
   int16_t iqmsa; // to detect a need for a PLL reset
 ///*
   enum ms_t { PLLA=0, PLLB=1, MSNA=-2, MSNB=-1, MS0=0, MS1=1, MS2=2, MS3=3, MS4=4, MS5=5 };
-  
+
   void ms(int8_t n, uint32_t div_nom, uint32_t div_denom, uint8_t pll = PLLA, uint8_t _int = 0, uint16_t phase = 0, uint8_t rdiv = 0){
     uint16_t msa; uint32_t msb, msc, msp1, msp2, msp3;
     msa = div_nom / div_denom;     // integer part: msa must be in range 15..90 for PLL, 8+1/1048575..900 for MS
@@ -1537,7 +1537,7 @@ public:
       ms(MSNB, fvcoa, fxtal);
       ms(MS2,  fvcoa, fout, PLLB, 0, 0, 0);
   }
-  
+
 //*/
 /*
   void freq(uint32_t fout, uint16_t i, uint16_t q){  // Set a CLK0,1 to fout Hz with phase i, q
@@ -1557,7 +1557,7 @@ public:
       msa = fvcoa / fxtal;     // Integer part of vco/fxtal. msa must be in range 15..90
       msb = ((uint64_t)(fvcoa % fxtal)*_MSC) / fxtal; // fractional part
       msc = _MSC;
-      
+
       msp1 = 128*msa + 128*msb/msc - 512;
       msp2 = 128*msb - 128*msb/msc * msc;
       msp3 = msc;
@@ -1650,7 +1650,7 @@ public:
   volatile uint8_t pll_regs[8];
   volatile int32_t iqmsa;
   volatile int32_t pll_freq;   // temporary
-  
+
   SI5351(){
     init();
     iqmsa = 0;
@@ -1688,13 +1688,13 @@ public:
     uint32_t P1; // Synth config register P1
     uint32_t P2; // Synth config register P2
     uint32_t P3; // Synth config register P3
-  
+
     P1 = (uint32_t)(128 * ((float)num / (float)denom));
     P1 = (uint32_t)(128 * (uint32_t)(divider) + P1 - 512);
     P2 = (uint32_t)(128 * ((float)num / (float)denom));
     P2 = (uint32_t)(128 * num - denom * P2);
     P3 = denom;
-  
+
     SendRegister(reg + 0, (P3 & 0x0000FF00) >> 8);
     SendRegister(reg + 1, (P3 & 0x000000FF));
     SendRegister(reg + 2, (P1 & 0x00030000) >> 16 | ((int)log2(r_div) << 4) );
@@ -1717,7 +1717,7 @@ public:
     SendByte(pll_regs[7]);
     stop();
   }
-  
+
   #define FAST __attribute__((optimize("Ofast")))
 
   // this function relies on cached (global) variables: divider, mult, raw_freq, pll_regs
@@ -1729,7 +1729,7 @@ public:
     register int32_t z = ((divider * (raw_freq + freq_offset)) % fxtal);
     register int32_t z2 = -(z >> 5);
     int32_t num128 = (z * 5) + z2;
-  
+
     // Set up specified PLL with mult, num and denom: mult is 15..90, num128 is 0..128*1,048,575 (128*0xFFFFF), denom is 0..1,048,575 (0xFFFFF)
     uint32_t P1 = 128 * mult + (num128 / 0xFFFFF) - 512;
     uint32_t P2 = num128 % 0xFFFFF;
@@ -1760,14 +1760,14 @@ public:
     uint8_t r_div = (freq < 500000) ? 128 : 1;
     freq *= r_div;  // take r_div into account, now freq is in the range 1MHz to 150MHz
     raw_freq = freq;   // cache frequency generated by PLL and MS stages (excluding R divider stage); used by freq_calc_fast()
-  
+
     divider = SI_PLL_FREQ / freq;  // Calculate the division ratio. 900,000,000 is the maximum internal PLL freq (official range 600..900MHz but can be pushed to 300MHz..~1200Mhz)
     if(divider % 2) divider--;  // divider in range 8.. 900 (including 4,6 for integer mode), even numbers preferred. Note that uint8 datatype is used, so 254 is upper limit
     if( (divider * (freq - 5000) / fxtal) != (divider * (freq + 5000) / fxtal) ) divider -= 2; // Test if multiplier remains same for freq deviation +/- 5kHz, if not use different divider to make same
     pll_freq = divider * freq; // Calculate the pll_freq: the divider * desired output freq
     uint32_t num, denom;
     mult = div(pll_freq, fxtal, &num, &denom); // Determine the mult to get to the required pll_freq (in the range 15..90)
-  
+
     // Set up specified PLL with mult, num and denom: mult is 15..90, num is 0..1,048,575 (0xFFFFF), denom is 0..1,048,575 (0xFFFFF)
     // Set up PLL A and PLL B with the calculated  multiplication ratio
     SetupMultisynth(SI_SYNTH_PLL_A, mult, num, denom, 1);
@@ -1803,14 +1803,14 @@ public:
   {
     uint32_t num, denom;
     uint16_t mult = div(pll_freq, freq, &num, &denom);
-  
+
     SetupMultisynth(SI_SYNTH_MS_2, mult, num, denom, 1);
-  
+
     // Switch on the CLK2 output to be PLL A and set multiSynth2 input
     SendRegister(SI_CLK2_CONTROL, 0x0F | SI_CLK_SRC_PLL_A);
-  
+
     SendRegister(SI_CLK_OE, 0b11111000); // Enable CLK2|CLK1|CLK0
-  
+
     //SendRegister(SI_CLK0_PHOFF, 0 * divider / 90); // one LSB equivalent to a time delay of Tvco/4 range 0..127
     //SendRegister(SI_CLK1_PHOFF, 90 * divider / 90); // one LSB equivalent to a time delay of Tvco/4 range 0..127
     //SendRegister(SI_CLK2_PHOFF, 45 * divider / 90); // one LSB equivalent to a time delay of Tvco/4 range 0..127
@@ -2159,7 +2159,7 @@ void dummy()
 void dsp_tx_cw()
 { // jitter dependent things first
 #ifdef KEY_CLICK
-  if(OCR1BL < lut[255]) { //check if already ramped up: ramp up of amplitude 
+  if(OCR1BL < lut[255]) { //check if already ramped up: ramp up of amplitude
      for(uint16_t i = 31; i != 0; i--) {   // soft rising slope against key-clicks
         OCR1BL = lut[pgm_read_byte_near(&ramp[i-1])];
         delayMicroseconds(60);
@@ -2167,7 +2167,7 @@ void dsp_tx_cw()
   }
 #endif // KEY_CLICK
   OCR1BL = lut[255];
-  
+
   process_minsky();
   OCR1AL = (p_sin >> (16 - volume)) + 128;
 }
@@ -2216,7 +2216,7 @@ uint8_t delayWithKeySense(uint32_t ms){
   for(; millis() < event;){
     wdt_reset();
     if(inv ^ digitalRead(BUTTONS) || !digitalRead(DAH) || !digitalRead(DIT)){
-      for(; inv ^ digitalRead(BUTTONS);) wdt_reset();  // wait until buttons released  
+      for(; inv ^ digitalRead(BUTTONS);) wdt_reset();  // wait until buttons released
       return 1;  // stop when button/key pressed
     }
   }
@@ -2344,7 +2344,7 @@ void dec2()
       hightimesavg = (highduration+hightimesavg+hightimesavg)/3;     // now we know avg dit time ( rolling 3 avg)
     }
     if(highduration > (5*hightimesavg)){
-      hightimesavg = highduration/3;     // if speed decrease fast ..      
+      hightimesavg = highduration/3;     // if speed decrease fast ..
       //hightimesavg = highduration+hightimesavg;     // if speed decrease fast ..
     }
   }
@@ -2370,10 +2370,10 @@ void dec2()
       wpm = (wpm + (1200/((highduration)/3) * 4/3))/2;
     }
   }
- 
-   if(filteredstate == HIGH){  // we did end a LOW 
+
+   if(filteredstate == HIGH){  // we did end a LOW
      uint16_t lacktime = 10;
-     if(wpm > 25)lacktime=10; // when high speeds we have to have a little more pause before new letter or new word 
+     if(wpm > 25)lacktime=10; // when high speeds we have to have a little more pause before new letter or new word
      if(wpm > 30)lacktime=12;
      if(wpm > 35)lacktime=15;
 
@@ -2428,7 +2428,7 @@ void dec2()
       hightimesavg = (highduration+hightimesavg+hightimesavg)/3;     // now we know avg dit time (rolling 3 avg)
     }
     if(highduration > (5*hightimesavg)){
-      hightimesavg = highduration/3;     // if speed decrease fast ..      
+      hightimesavg = highduration/3;     // if speed decrease fast ..
       //hightimesavg = highduration+hightimesavg;     // if speed decrease fast ..
     }
     if(highduration > (hightimesavg/2)){ sym=(sym<<1)|(highduration > (hightimesavg*2));       // dit (0) or dash (1)
@@ -2438,7 +2438,7 @@ void dec2()
     }
   }
  }
- 
+
  if(((millis() - startttimelow) > hightimesavg*(6)) && (sym > 1)){
  //if(((millis() - startttimelow) > hightimesavg*(12)) && (sym > 1)){
    //if(sym == 2) sym = 1; else // skip E E E E E
@@ -2446,7 +2446,7 @@ void dec2()
    //sym=0; printsym(); // print special char
    //startttimelow = millis();
  }
- 
+
  filteredstatebefore = filteredstate;
 }
 #endif //OLD_CW
@@ -2475,8 +2475,8 @@ volatile uint8_t _init = 0;
 
 // Old AGC algorithm which only increases gain, but does not decrease it for very strong signals.
 // Maximum possible gain is x32 (in practice, x31) so AGC range is x1 to x31 = 30dB approx.
-// Decay time is fine (about 1s) but attack time is much slower than I like. 
-// For weak/medium signals it aims to keep the sample value between 1024 and 2048. 
+// Decay time is fine (about 1s) but attack time is much slower than I like.
+// For weak/medium signals it aims to keep the sample value between 1024 and 2048.
 static int16_t gain = 1024;
 inline int16_t process_agc_fast(int16_t in)
 {
@@ -2547,18 +2547,18 @@ inline int16_t process_nr_old(int16_t ac)
 }
 
 inline int16_t process_nr_old2(int16_t ac)
-{  
+{
   static int16_t ea1;
   //ea1 = MLEA(ea1, ac, 5, 6); // alpha=0.0156
   ea1 = EA(ea1, ac, 64); // alpha=1/64=0.0156
   //static int16_t ea2;
   //ea2 = EA(ea2, ea1, 64); // alpha=1/64=0.0156
- 
+
   return ea1;
 }
 
 inline int16_t process_nr(int16_t in)
-{ 
+{
 /*
   static int16_t avg;
   avg = EA(avg, abs(in), 64); // alpha=1/64=0.0156
@@ -2572,7 +2572,7 @@ param_c = avg;
   if(_avg > 14) _avg = 14;  // clip
   uint16_t brs_avgsq = 1 << (_avg);
 
-  
+
   int16_t inv_gain;
   if(brs_avgsq > 1) inv_gain = brs_avgsq / (brs_avgsq - 1);  // = 1 / (1 - 1/(1 << (1*avg*avg)) );
   else inv_gain = 32768;*/
@@ -2631,11 +2631,11 @@ uint8_t prev_filt[] = { 0 , 4 }; // default filter for modes resp. CW, SSB
   out=zc0/8
 */
 inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
-{ 
+{
   static int16_t za1,za2;
   static int16_t zb0,zb1,zb2;
   static int16_t zc0,zc1,zc2;
-  
+
   if(filt < 4)
   {  // for SSB filters
     // 1st Order (SR=8kHz) IIR in Direct Form I, 8x8:16
@@ -2659,7 +2659,7 @@ inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
       case 3: zb0=(za0+2*za1+za2)/2-(0*zb1+4*zb2)/16; break;     //0-1800Hz  elliptic
       //case 3: zb0=(za0+7*za1+za2)/16-(-24*zb1+9*zb2)/16; break;  //0-1700Hz  elliptic with slope
     }
-  
+
     switch(filt){
       case 1: zc0=(zb0+2*zb1+zb2)/2-(18*zc1+11*zc2)/16; break;     // 0-2900Hz filter, second biquad section
       case 2: zc0=(zb0+2*zb1+zb2)/4-(4*zc1+8*zc2)/16; break;       // 0-2400Hz filter, second biquad section
@@ -2672,22 +2672,22 @@ inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
       case 2: zb0=(10*(za0+2*za1+za2)+16*zb1-17*zb2)/32; break;    //0-2500Hz  elliptic -60dB@3kHz
       case 3: zb0=(7*(za0+2*za1+za2)+48*zb1-18*zb2)/32; break;     //0-1700Hz  elliptic
     }
-  
+
     switch(filt){
       case 1: zc0=zb0; break; //0-4000Hz (pass-through)
       case 2: zc0=(8*(zb0+zb2)+13*zb1-43*zc1-52*zc2)/64; break;   //0-2500Hz  elliptic -60dB@3kHz
       case 3: zc0=(4*(zb0+zb1+zb2)+22*zc1-47*zc2)/64; break;   //0-1700Hz  elliptic
     }*/
-  
+
     zc2=zc1;
     zc1=zc0;
-  
+
     zb2=zb1;
     zb1=zb0;
-  
+
     za2=za1;
     za1=za0;
-    
+
     return zc0;
   } else { // for CW filters
     //   (2nd Order (SR=4465Hz) IIR in Direct Form I, 8x8:16), adding 64x front-gain (to deal with later division)
@@ -2698,13 +2698,13 @@ inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
         case 4: zb0=(za0+2*za1+za2)/2+(41L*zb1-23L*zb2)/32; break;   //500-1000Hz
         case 5: zb0=5*(za0-2*za1+za2)+(105L*zb1-58L*zb2)/64; break;   //650-840Hz
         case 6: zb0=3*(za0-2*za1+za2)+(108L*zb1-61L*zb2)/64; break;   //650-750Hz
-        case 7: zb0=(2*za0-3*za1+2*za2)+(111L*zb1-62L*zb2)/64; break; //630-680Hz       
+        case 7: zb0=(2*za0-3*za1+2*za2)+(111L*zb1-62L*zb2)/64; break; //630-680Hz
         //case 4: zb0=(0*za0+1*za1+0*za2)+(28*zb1-14*zb2)/16; break; //600Hz+-250Hz
         //case 5: zb0=(0*za0+1*za1+0*za2)+(28*zb1-15*zb2)/16; break; //600Hz+-100Hz
         //case 6: zb0=(0*za0+1*za1+0*za2)+(27*zb1-15*zb2)/16; break; //600Hz+-50Hz
         //case 7: zb0=(0*za0+1*za1+0*za2)+(27*zb1-15*zb2)/16; break; //630Hz+-18Hz
       }
-    
+
       switch(filt){
         case 4: zc0=(zb0-2*zb1+zb2)/4+(105L*zc1-52L*zc2)/64; break;      //500-1000Hz
         case 5: zc0=((zb0+2*zb1+zb2)+97L*zc1-57L*zc2)/64; break;      //650-840Hz
@@ -2724,7 +2724,7 @@ inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
         //case 5: zb0=(1*za0+2*za1+1*za2)/2+(102L*zb1-52L*zb2)/64; break; //600Hz+-100Hz
         //case 6: zb0=(1*za0+2*za1+1*za2)/2+(107L*zb1-57L*zb2)/64; break; //600Hz+-50Hz
         //case 7: zb0=(0*za0+1*za1+0*za2)+(110L*zb1-61L*zb2)/64; break; //600Hz+-25Hz
-        
+
         case 4: zb0=(0*za0+1*za1+0*za2)+(114L*zb1-57L*zb2)/64; break; //600Hz+-250Hz
         case 5: zb0=(0*za0+1*za1+0*za2)+(113L*zb1-60L*zb2)/64; break; //600Hz+-100Hz
         case 6: zb0=(0*za0+1*za1+0*za2)+(110L*zb1-62L*zb2)/64; break; //600Hz+-50Hz
@@ -2736,34 +2736,34 @@ inline int16_t filt_var(int16_t za0)  //filters build with www.micromodeler.com
         case 6: zb0=(0*za0+1*za1+0*za2)+2*zb1-zb2+(-14L*zb1+2L*zb2)/64; break; //600Hz+-50Hz
         case 7: zb0=(0*za0+1*za1+0*za2)+2*zb1-zb2+(-14L*zb1+3L*zb2)/64; break; //600Hz+-18Hz*/
       }
-    
+
       switch(filt){
         //case 4: zc0=(zb0-2*zb1+zb2)/4+(95L*zc1-44L*zc2)/64; break; //600Hz+-250Hz
         //case 5: zc0=(zb0-2*zb1+zb2)/8+(104L*zc1-53L*zc2)/64; break; //600Hz+-100Hz
         //case 6: zc0=(zb0-2*zb1+zb2)/16+(106L*zc1-56L*zc2)/64; break; //600Hz+-50Hz
         //case 7: zc0=(zb0-2*zb1+zb2)/32+(112L*zc1-62L*zc2)/64; break; //600Hz+-25Hz
-        
+
         case 4: zc0=(zb0-2*zb1+zb2)/1+(95L*zc1-52L*zc2)/64; break; //600Hz+-250Hz
         case 5: zc0=(zb0-2*zb1+zb2)/4+(106L*zc1-59L*zc2)/64; break; //600Hz+-100Hz
         case 6: zc0=(zb0-2*zb1+zb2)/16+(113L*zc1-62L*zc2)/64; break; //600Hz+-50Hz
         case 7: zc0=(zb0-2*zb1+zb2)/32+(112L*zc1-62L*zc2)/64; break; //600Hz+-18Hz
         //case 8: zc0=(zb0-2*zb1+zb2)/64+(113L*zc1-63L*zc2)/64; break; //591Hz+-12Hz
-        
+
         /*case 4: zc0=(zb0-2*zb1+zb2)/1+zc1-zc2+(31L*zc1+12L*zc2)/64; break; //600Hz+-250Hz
         case 5: zc0=(zb0-2*zb1+zb2)/4+2*zc1-zc2+(-22L*zc1+5L*zc2)/64; break; //600Hz+-100Hz
         case 6: zc0=(zb0-2*zb1+zb2)/16+2*zc1-zc2+(-15L*zc1+2L*zc2)/64; break; //600Hz+-50Hz
         case 7: zc0=(zb0-2*zb1+zb2)/16+2*zc1-zc2+(-16L*zc1+2L*zc2)/64; break; //600Hz+-18Hz*/
-      } 
+      }
     }
     zc2=zc1;
     zc1=zc0;
-  
+
     zb2=zb1;
     zb1=zb0;
-  
+
     za2=za1;
     za1=za0;
-    
+
     //return zc0 / 64; // compensate the 64x front-end gain
     return zc0 / 8; // compensate the front-end gain
   }
@@ -2850,7 +2850,7 @@ inline int16_t slow_dsp(int16_t ac)
   if(!(absavg256cnt % 64)){ _amp32 = amp32; amp32 = 0; } else amp32 += abs(ac);
 #endif  //CW_DECODER
   //if(!(absavg256cnt--)){ _absavg256 = absavg256; absavg256 = 0; } else absavg256 += abs(ac);  //hack
-  
+
   //static int16_t dc;
   //dc += (ac - dc) / 2;
   //dc = (15*dc + ac)/16;
@@ -3073,7 +3073,7 @@ inline int16_t sdr_rx_common_q(){
 
 inline int16_t sdr_rx_common_i()
 {
-  ADMUX = admux[1]; ADCSRA |= (1 << ADSC); int16_t adc = ADC - 511; 
+  ADMUX = admux[1]; ADCSRA |= (1 << ADSC); int16_t adc = ADC - 511;
   static int16_t prev_adc;
   int16_t ac = (prev_adc + adc) / 2; prev_adc = adc;
 #ifdef AF_OUT
@@ -3100,7 +3100,7 @@ void sdr_rx()
 #endif
   func_ptr = sdr_rx_q;    // processing function for next conversion
   sdr_rx_common();
-  
+
   static int16_t prev_adc;
   int16_t corr_adc = (prev_adc + adc) / 2;  // Only for I: correct I/Q sample delay by means of linear interpolation
   prev_adc = adc;
@@ -3136,10 +3136,10 @@ void sdr_rx()
         interrupts();
         ozd2 = od1;
         ozd1 = ac3;
-        
+
         //if(nested){ return; } // fuse for too many nested interrupts (prevent stack overflow)
         //nested++;
-        //interrupts();  // hack: post processing may be extend until next sample time: allow next sample to be processed while postprocessing        
+        //interrupts();  // hack: post processing may be extend until next sample time: allow next sample to be processed while postprocessing
 
         {
           q_ac2 >>= att2;  // digital gain control
@@ -3232,7 +3232,7 @@ void sdr_rx()
   int16_t adc = ADC - 511; // current ADC sample 10-bits analog input, NOTE: first ADCL, then ADCH
   func_ptr = sdr_rx_q;    // processing function for next conversion
   sdr_rx_common();
-  
+
   // Only for I: correct I/Q sample delay by means of linear interpolation
   static int16_t prev_adc;
   int16_t corr_adc = (prev_adc + adc) / 2;
@@ -3261,7 +3261,7 @@ void sdr_rx()
         // post processing I and Q (down-sampled) results
         static int16_t v[7];
         i = v[0]; v[0] = v[1]; v[1] = v[2]; v[2] = v[3]; v[3] = v[4]; v[4] = v[5]; v[5] = v[6]; v[6] = ac2;  // Delay to match Hilbert transform on Q branch
-        
+
         int16_t ac = i + qh;
         ac = slow_dsp(ac);
 
@@ -3406,7 +3406,7 @@ void sdr_rx()
     ac = ADC - 512; // current ADC sample 10-bits analog input, NOTE: first ADCL, then ADCH
     _rx_state = rx_state;
   }
-    
+
   if(_rx_state & 0x02){  // rx_state == I: 0, 4  Q: 3, 7  1st stage: down-sample by 2
     int16_t _ac = ac + p->za1 + p->z1 * 2;           // 1st stage: FA + FB
     p->za1 = ac;
@@ -3473,7 +3473,7 @@ asm("push r24         \n\t"
 
 void adc_start(uint8_t adcpin, bool ref1v1, uint32_t fs)
 {
-  DIDR0 |= (1 << adcpin); // disable digital input 
+  DIDR0 |= (1 << adcpin); // disable digital input
   ADCSRA = 0;             // clear ADCSRA register
   ADCSRB = 0;             // clear ADCSRB register
   ADMUX = 0;              // clear ADMUX register
@@ -3698,7 +3698,7 @@ int16_t smeter(int16_t ref = 0)
     else               rms /= (256.0 * 1024.0 * (float)R * 2.0 * 100.0 * 120.0 / (1.750 * 5.0));   // = -94.6dB
     dbm = 10 * log10((rms * rms) / 50) + 30 - ref; //from rmsV to dBm at 50R
 
-    lcd.noCursor(); 
+    lcd.noCursor();
     if(smode == 1){ // dBm meter
       lcd.setCursor(9, 0); lcd.print((int16_t)dbm); lcd.print(F("dBm "));
     }
@@ -3735,7 +3735,7 @@ int16_t smeter(int16_t ref = 0)
     }
 #endif //CLOCK
     stepsize_showcursor();
-    max_absavg256 /= 2;  // Implement peak hold/decay for all meter types    
+    max_absavg256 /= 2;  // Implement peak hold/decay for all meter types
   }
   return dbm;
 }
@@ -3759,7 +3759,7 @@ void start_rx()
     adc_start(0, false, F_ADC_CONV); admux[0] = ADMUX; admux[1] = ADMUX;
   }
   timer1_start(F_SAMP_PWM);
-  timer2_start(F_SAMP_RX);  
+  timer2_start(F_SAMP_RX);
   TCCR1A &= ~(1 << COM1B1); digitalWrite(KEY_OUT, LOW); // disable KEY_OUT PWM
 }
 
@@ -3831,7 +3831,7 @@ void switch_rxtx(uint8_t tx_enable){
 #ifdef CW_DECODER
   if((cwdec) && (mode == CW)){ filteredstate = tx_enable; dec2(); }
 #endif  //CW_DECODER
-  
+
   if(tx_enable){ // tx
     if(practice){
       digitalWrite(RX, LOW); // TX (disable RX)
@@ -3922,7 +3922,7 @@ void calibrate_iq()
   smode = 1;
   lcd.setCursor(0, 0); lcd_blanks(); lcd_blanks();
   digitalWrite(SIG_OUT, true); // loopback on
-  si5351.freq(freq, 0, 90);  // RX in USB  
+  si5351.freq(freq, 0, 90);  // RX in USB
   si5351.SendRegister(SI_CLK_OE, TX1RX1);
   float dbc;
   si5351.freqb(freq+700); delay(100);
@@ -4003,7 +4003,7 @@ void powerDown()
 
   MCUSR = ~(1<<WDRF);  // MSY be done before wdt_disable()
   wdt_disable();   // WDTON Fuse High bit need to be 1 (0xD1), if NOT it will override and set WDE=1; WDIE=0, meaning MCU will reset when watchdog timer is zero, and this seems to happen when wdt_disable() is called
-  
+
   timer2_stop();
   timer1_stop();
   adc_stop();
@@ -4076,7 +4076,7 @@ inline void display_vfo(int32_t f){
     lcd.print(abs(f/scale));
     if(scale == (int32_t)1e3 || scale == (int32_t)1e6) lcd.print(',');  // Thousands separator
   }
-  
+
   lcd.print(' '); lcd.print(mode_label[mode]); lcd.print(' ');
   lcd.setCursor(15, 1); lcd.print((vox) ? 'V' : 'R');
 }
@@ -4087,7 +4087,7 @@ volatile uint8_t prev_menumode = 0;
 volatile int8_t menu = 0;  // current parameter id selected in menu
 
 #define pgm_cache_item(addr, sz) byte _item[sz]; memcpy_P(_item, addr, sz);  // copy array item from PROGMEM to SRAM
-#define get_version_id() ((VERSION[0]-'1') * 2048 + ((VERSION[2]-'0')*10 + (VERSION[3]-'0')) * 32 +  ((VERSION[4]) ? (VERSION[4] - 'a' + 1) : 0) * 1)  // converts VERSION string with (fixed) format "9.99z" into uint16_t (max. values shown here, z may be removed) 
+#define get_version_id() ((VERSION[0]-'1') * 2048 + ((VERSION[2]-'0')*10 + (VERSION[3]-'0')) * 32 +  ((VERSION[4]) ? (VERSION[4] - 'a' + 1) : 0) * 1)  // converts VERSION string with (fixed) format "9.99z" into uint16_t (max. values shown here, z may be removed)
 
 uint8_t eeprom_version;
 #define EEPROM_OFFSET 0x150  // avoid collision with QCX settings, overwrites text settings though
@@ -4260,7 +4260,7 @@ int8_t paramAction(uint8_t action, uint8_t id = ALL)  // list of parameters
     for(uint8_t _id = 1; _id < id; _id++) paramAction(SKIP, _id);
   }
   if(id == ALL) for(id = 1; id != N_ALL_PARAMS+1; id++) paramAction(action, id);  // for all parameters
-  
+
   switch(id){    // Visible parameters
     case VOLUME:  paramAction(action, volume, 0x11, F("Volume"), NULL, -1, 16, false); break;
     case MODE:    paramAction(action, mode, 0x12, F("Mode"), mode_label, 0, _N(mode_label) - 1, false); break;
@@ -4269,7 +4269,7 @@ int8_t paramAction(uint8_t action, uint8_t id = ALL)  // list of parameters
     case STEP:    paramAction(action, stepsize, 0x15, F("Tune Rate"), stepsize_label, 0, _N(stepsize_label) - 1, false); break;
     case VFOSEL:  paramAction(action, vfosel, 0x16, F("VFO Mode"), vfosel_label, 0, _N(vfosel_label) - 1, false); break;
 #ifdef RIT_ENABLE
-    case RIT:     paramAction(action, rit, 0x17, F("RIT"), offon_label, 0, 1, false); break;    
+    case RIT:     paramAction(action, rit, 0x17, F("RIT"), offon_label, 0, 1, false); break;
 #endif
 #ifdef FAST_AGC
     case AGC:     paramAction(action, agc, 0x18, F("AGC"), agc_label, 0, _N(agc_label) - 1, false); break;
@@ -4926,7 +4926,7 @@ void setup()
     digitalWrite(AUDIO2, HIGH);   // generate pulse on AUDIO2 and test if it can be seen on AUDIO1
     pinMode(AUDIO2, OUTPUT);
     delay(1);
-    digitalWrite(AUDIO2, LOW); 
+    digitalWrite(AUDIO2, LOW);
     delay(1);
     digitalWrite(AUDIO2, HIGH);
     v2 = analogRead(AUDIO1);
@@ -4968,7 +4968,7 @@ void setup()
   lcd.setCursor(0, 1); lcd.print(F("Power-On")); lcd_blanks();
     delay(1); wdt_reset();
   }*/
-  
+
   // Measure CPU loads
   if(!(load_tx <= 100)){
     fatal(F("CPU_tx"), load_tx, '%');
@@ -5049,7 +5049,7 @@ void setup()
       fatal(F("Vadc1"), audio2, 'V');
     }
   }
-  
+
 #ifdef TX_ENABLE
   // Measure I2C Bus speed for Bulk Transfers
   //si5351.freq(freq, 0, 90);
@@ -5093,7 +5093,7 @@ void setup()
 #endif //QCX
   cw_offset = tones[cw_tone];
   //freq = bands[band];
-  
+
   // Load parameters from EEPROM, reset to factory defaults when stored values are from a different version
   paramAction(LOAD, VERS);
   if((eeprom_version != get_version_id()) || _digitalRead(BUTTONS)){  // EEPROM clean: if rotary-key pressed or version signature in EEPROM does NOT corresponds with this firmware
@@ -5399,7 +5399,7 @@ void loop()
         if(mode == CW && (filt == 5 || filt == 6) && stepsize < STEP_100) stepsize = STEP_100; // for CW BW 200, 100      -> step = 100 Hz
         if(mode == CW && filt == 7 && stepsize < STEP_10) stepsize = STEP_10;                  // for CW BW 50 -> step = 10 Hz
         if(mode != CW && filt > 3) filt = 0;
-        encoder_val = 0; 
+        encoder_val = 0;
         paramAction(UPDATE, FILTER);
         paramAction(SAVE, FILTER);
         wdt_reset(); delay(1500); wdt_reset();
@@ -5440,7 +5440,7 @@ void loop()
           vfosel = !vfosel;
           freq = vfo[vfosel%2];  // todo: share code with menumode
           mode = vfomode[vfosel%2];
-          // make more generic: 
+          // make more generic:
           if(mode != CW) stepsize = STEP_1k; else stepsize = STEP_500;
           if(mode == CW) { filt = 4; nr = 0; } else filt = 0;
         }
@@ -5584,7 +5584,7 @@ void loop()
           paramAction(SAVE, (vfosel%2) ? MODEB : MODEA);  // save vfoa/b changes
           change = true;
           si5351.iqmsa = 0;  // enforce PLL reset
-          // make more generic: 
+          // make more generic:
           if(mode != CW) stepsize = STEP_1k; else stepsize = STEP_500;
           if(mode == CW) { filt = 4; nr = 0; } else filt = 0;
         }
@@ -5595,7 +5595,7 @@ void loop()
         if(menu == VFOSEL){
           freq = vfo[vfosel%2];
           mode = vfomode[vfosel%2];
-          // make more generic: 
+          // make more generic:
           if(mode != CW) stepsize = STEP_1k; else stepsize = STEP_500;
           if(mode == CW) { filt = 4; nr = 0; } else filt = 0;
           change = true;
@@ -5692,7 +5692,7 @@ void loop()
     if(prev_bandval != bandval){ freq = band[bandval]; prev_bandval = bandval; }
     vfo[vfosel%2] = freq;
     save_event_time = millis() + 1000;  // schedule time to save freq (no save while tuning, hence no EEPROM wear out)
- 
+
     if(menumode == 0){
       display_vfo(freq);
       stepsize_showcursor();
@@ -5723,7 +5723,7 @@ void loop()
 #endif //RIT_ENABLE
     //interrupts();
   }
-  
+
   if((save_event_time) && (millis() > save_event_time)){  // save freq when time has reached schedule
     paramAction(SAVE, (vfosel%2) ? FREQB : FREQA);  // save vfoa/b changes
     save_event_time = 0;
@@ -5731,7 +5731,7 @@ void loop()
   }
 
 #ifdef CW_MESSAGE
-  if((mode == CW) && (cw_msg_event) && (millis() > cw_msg_event)){  // if it is time to send a CW message 
+  if((mode == CW) && (cw_msg_event) && (millis() > cw_msg_event)){  // if it is time to send a CW message
     if((cw_tx(cw_msg[cw_msg_id]) == 0) && ((cw_msg[cw_msg_id][0] == 'C') && (cw_msg[cw_msg_id][1] == 'Q')) && cw_msg_interval) cw_msg_event = millis() + 1000 * cw_msg_interval; else cw_msg_event = 0;  // then send message, if not interrupted and its a CQ msg and there is an interval set, then schedule new event
   }
 #endif //CW_MESSAGE
