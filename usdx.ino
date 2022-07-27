@@ -4354,7 +4354,8 @@ int8_t paramAction(uint8_t action, uint8_t id = ALL)  // list of parameters
   return id;
 }
 
-void initPins(){
+void initPins()
+{
   // initialize
   digitalWrite(SIG_OUT, LOW);
   digitalWrite(RX, HIGH);
@@ -4550,29 +4551,38 @@ echo ";UA1;" > /dev/ttyACM0
 
 #ifdef CAT
 volatile uint8_t cat_ptr = 0;
-void serialEvent(){
-  if(Serial.available()){
-    rxend_event = millis() + 10;  // block display until this moment, to prevent CAT cmds that initiate display changes to interfere with the next CAT cmd e.g. Hamlib: FA00007071000;ID;
-    char data = Serial.read();
-    CATcmd[cat_ptr++] = data;
-    if(data == ';'){
-      CATcmd[cat_ptr] = '\0'; // terminate the array
-      cat_ptr = 0;            // reset for next CAT command
-#ifdef _SERIAL
-      if(!cat_active){ cat_active = 1; smode = 0;} // disable smeter to reduce display activity
-#endif
-#ifdef CAT_STREAMING
-      if(cat_streaming){ noInterrupts(); cat_streaming = false; Serial.print(';'); }   // terminate CAT stream
-      analyseCATcmd();   // process CAT cmd
-      if(_cat_streaming){ Serial.print("US"); cat_streaming = true; }  // resume CAT stream
-      interrupts();
-#else
-      analyseCATcmd();
-#endif // CAT_STREAMING
-      delay(10);
-    } else if(cat_ptr > (CATCMD_SIZE - 1)){ Serial.print("E;"); cat_ptr = 0; } // overrun
-  }
+void serialEvent()
+{
+	if (Serial.available())
+	{
+		rxend_event = millis() + 10; // block display until this moment, to prevent CAT cmds that initiate display changes to interfere with the next CAT cmd e.g. Hamlib: FA00007071000;ID;
+		char data = Serial.read();
+		CATcmd[cat_ptr++] = data;
+		if (data == ';')
+		{
+			CATcmd[cat_ptr] = '\0'; // terminate the array
+			cat_ptr = 0;            // reset for next CAT command
+	#ifdef _SERIAL
+		  if(!cat_active){ cat_active = 1; smode = 0;} // disable smeter to reduce display activity
+	#endif
+	#ifdef CAT_STREAMING
+		  if(cat_streaming){ noInterrupts(); cat_streaming = false; Serial.print(';'); }   // terminate CAT stream
+		  analyseCATcmd();   // process CAT cmd
+		  if(_cat_streaming){ Serial.print("US"); cat_streaming = true; }  // resume CAT stream
+		  interrupts();
+	#else
+			analyseCATcmd();
+	#endif // CAT_STREAMING
+			delay(10);
+		}
+		else if (cat_ptr > (CATCMD_SIZE - 1))
+		{
+			Serial.print("E;");
+			cat_ptr = 0;
+		} // overrun
+	}
 }
+//}
 #endif //CAT
 
 #ifdef CAT_EXT
